@@ -3,24 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prank Site</title>
+    <title>Проверка безопасности</title>
     <style>
-        body {
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 20px;
+            background: linear-gradient(45deg, #000, #333);
+            color: white;
+            margin: 0;
+            height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
         }
-        h1 {
-            color: #333;
-            text-align: center;
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
+        .captcha {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h1, h3 {
+            margin: 10px 0;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            width: 100px;
+            margin: 10px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #ff3742;
+        }
+        #error {
+            display: none;
+            color: #ff4757;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        #prank {
+            display: none;
+            animation: bounceIn 1s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .prank-text {
+            font-size: 2.5em;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @media (max-width: 600px) {
+            .prank-text { font-size: 2em; }
         }
     </style>
 </head>
 <body>
-    <h1>Ты лох! Таково твоё призвание! 🤣</h1>
+    <div class="container">
+        <div id="captcha" class="captcha">
+            <h1>🔐 Проверка на человечность</h1>
+            <p>Система безопасности обнаружила подозрительную активность. Пройдите проверку, чтобы продолжить.</p>
+            
+            <h3>Решите капчу:</h3>
+            <p id="question">Сколько будет 7 + 5?</p>
+            <input type="text" id="answer" placeholder="Введите число">
+            <br>
+            <button onclick="checkCaptcha()">Подтвердить</button>
+        </div>
+
+        <div id="error"></div>
+
+        <div id="prank">
+            <div class="prank-text">Ты лох! Таково твоё призвание! 🤣</div>
+            <p>Шучу, бро! Но факт есть факт. 😈</p>
+        </div>
+    </div>
+
+    <script>
+        function checkCaptcha() {
+            const answer = document.getElementById('answer').value.trim();
+            const errorDiv = document.getElementById('error');
+            const captchaDiv = document.getElementById('captcha');
+            const prankDiv = document.getElementById('prank');
+            
+            if (answer === '12') {
+                // Правильный ответ — показываем пранк
+                captchaDiv.style.display = 'none';
+                errorDiv.style.display = 'none';
+                prankDiv.style.display = 'block';
+                
+                // Можно добавить звук или редирект, если хочешь
+                // Например: window.location.href = 'another-page.html'; для второго удара
+            } else {
+                // Неправильный — ошибка
+                errorDiv.textContent = 'Неправильно! Попробуйте ещё раз. (Подсказка: 7+5=?)';
+                errorDiv.style.display = 'block';
+                document.getElementById('answer').value = ''; // Очищаем поле
+                document.getElementById('answer').focus(); // Фокус на поле
+            }
+        }
+        
+        // Автофокус на поле ввода при загрузке
+        window.onload = function() {
+            document.getElementById('answer').focus();
+        };
+        
+        // Поддержка Enter для отправки
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkCaptcha();
+            }
+        });
+    </script>
 </body>
 </html>
